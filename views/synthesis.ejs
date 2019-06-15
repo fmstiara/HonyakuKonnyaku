@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>SpeechSynthesisTest</title>
+</head>
+<body>
+  <h1>SpeechSynthesisTest</h1>
+  <input id="input-text" />
+  <button id="synthesis">音声合成</button>
+</body>
+<script>
+  document.querySelector("#synthesis").onclick = (e)=>{
+    const str = document.querySelector("#input-text").value;
+    console.log(str);
+    if(str.length < 1) return
+
+    let synth = window.speechSynthesis;
+    let utterance = new SpeechSynthesisUtterance(str);
+    let voices = synth.getVoices();
+    utterance.voice = voices[0];
+    utterance.lang = "ja-JP";
+    synth.speak(utterance); 
+  }
+
+</script>
+</html>

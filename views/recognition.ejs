@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>SpeechRecognitionTest</title>
+</head>
+<body>
+  <h1>SpeechRecognitionTest</h1>
+  <button id="recognition">音声認識</button>
+</body>
+<script>
+const recognition = new webkitSpeechRecognition || new SpeechRecognition;
+recognition.lang = "ja-JP";
+
+recognition.onresult = (e)=>{
+  console.log(e.results[0][0].transcript);
+}
+document.querySelector("#recognition").onclick = recognition.start();
+</script>
+</html>

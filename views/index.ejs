@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.slim.js"></script>
+  <title>翻訳こんにゃく</title>
+</head>
+<body>
+  <div>翻訳こんにゃく〜</div>
+  <p class="recognize-text">ぼく、ドラ○もん</p>
+  <button id="recognize-button">音声認識</button>
+</body>
+<script>
+  // websocket接続
+  const socket = io();
+
+  const textDisplay = document.querySelector('.recognize-text');
+
+  try {
+    // 音声認識
+    const recognition = new webkitSpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.interimResults = true;
+    
+    // 認識スタート
+    recognition.onstart = (e)=>{
+      textDisplay.textContent = "認識中";
+      textDisplay.style.color = "#aaa";
+    }
+
+    // 認識終了
+    recognition.onresult = (e)=>{
+      const str = e.results[0][0].transcript;
+      textDisplay.textContent = str;
+
+      // serverに認識したテキストを送信
+      if(e.results[0].isFinal){
+        console.log('recognized is finished');
+        socket.emit('recognize', str);
+        textDisplay.style.color = "#333";
+      }
+    }
+
+    document.querySelector('#recognize-button').onclick = (e)=>{
+      recognition.start();
+    }
+
+    // 翻訳されたメッセージが届いたら、そのメッセージで音声合成する。
+    socket.on('message', (msg)=>{
+      console.log(msg);
+      synthsis(msg);
+    });
+
+  } catch (error) {
+    console.log(error);
+  }
+
+  function synthsis(_text = "test"){
+    let synth = window.speechSynthesis;
+    let utterance = new SpeechSynthesisUtterance(_text);
+    let voices = synth.getVoices();
+    utterance.voice = voices[0];
+    utterance.lang = "ja-JP";
+    synth.speak(utterance);
+  }
+</script>
+<style>
+  .recognize-text{
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    
+    padding: 8px;
+    
+    height: 30px;
+    line-height: 30px;
+  }
+</style>
+</html>
