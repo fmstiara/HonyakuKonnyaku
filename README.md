@@ -13,6 +13,6 @@
 - `node app.js`で実行!
 
 # routing
-- '/': 翻訳こんにゃく
-- '/recognition': SpeechRecognitionサンプル
-- '/synthesis': SpeechSynthesisサンプル
+- `/`: 翻訳こんにゃく
+- `/recognition`: SpeechRecognitionサンプル
+- `/synthesis`: SpeechSynthesisサンプル
